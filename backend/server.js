@@ -1,12 +1,10 @@
 const questionRoutes = require("./routes/questionRoutes");
-
-const pool=require("./db");
 const cors=require("cors");
-
 const express=require("express");
+
+
 const app=express();
 app.use(cors());
-
 
 app.use("/api",questionRoutes);
 
