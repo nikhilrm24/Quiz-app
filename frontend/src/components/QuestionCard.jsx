@@ -1,15 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./QuestionCard.css";
-import questions from "../Data/questions";
 
 function QuestionCard() {
- 
-
+  const [questions, setQuestions] = useState([]);
   const [currQuestion, setcurrQuestion] = useState(0);
   const [selectOption, setselectOption] = useState(null);
   const [isCrct, setisCrct] = useState("");
   const [score, setScore] = useState(0);
-  const [showResult,setShowResult]=useState(false);
+  const [showResult, setShowResult] = useState(false);
+
+  useEffect(() => {
+    fetch("http://localhost:3000/api/questions")
+      .then((response) => response.json())
+      .then((data) => setQuestions(data));
+  }, []);
+
+  if (questions.length === 0) {
+    return <p>Loading...</p>;
+  }
 
   const current = questions[currQuestion];
 
@@ -18,8 +26,8 @@ function QuestionCard() {
       setcurrQuestion(currQuestion + 1);
       setselectOption(null);
       setisCrct("");
-    }else{
-        setShowResult(true);
+    } else {
+      setShowResult(true);
     }
   }
 
@@ -33,7 +41,6 @@ function QuestionCard() {
 
     setTimeout(() => {
       changeQuestion();
-  
     }, 2000);
   }
 
@@ -41,55 +48,58 @@ function QuestionCard() {
     setselectOption(index);
   }
 
-  function restartQuiz(){
-       setcurrQuestion(0);
-       setselectOption(null);
-       setisCrct("");
-       setScore(0);
-       setShowResult(false);
+  function restartQuiz() {
+    setcurrQuestion(0);
+    setselectOption(null);
+    setisCrct("");
+    setScore(0);
+    setShowResult(false);
   }
-  if(showResult){
-        return(
-            <div className="res">
-                <div className="res-temp">
-                <p>Quiz completed🎉</p>
-                 
-                <p>your Score :{score}/{questions.length}</p>
-              
-                <button onClick={restartQuiz}>Restart</button>
-                </div>
-              
-            </div>
-        )
-    }
+
+  if (showResult) {
+    return (
+      <div className="res">
+        <div className="res-temp">
+          <h1>Quiz Completed 🎉</h1>
+          <p>
+            Your Score: {score}/{questions.length}
+          </p>
+
+          <button onClick={restartQuiz}>Restart</button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <>
-      <div className="main">
-        <h1>Quiz App</h1>
+    <div className="main">
+      <h1>Quiz App</h1>
 
-        <p>{current.question}</p>
+      <p>{current.question}</p>
 
-        <div className="btn">
-          {current.options.map((option, index) => (
-            <button
-              key={index}
-              onClick={() => {
-                selectIndex(index);
-                checkAns(index);
-              }}
-              className={index === selectOption ? isCrct==="correct answer"?"crct":"wrong":""}
-            >
-              {option}
-            </button>
-          ))}
-        </div>
-
-        <p>{isCrct}</p>
-
-
+      <div className="btn">
+        {current.options.map((option, index) => (
+          <button
+            key={index}
+            onClick={() => {
+              selectIndex(index);
+              checkAns(index);
+            }}
+            className={
+              index === selectOption
+                ? isCrct === "correct answer"
+                  ? "crct"
+                  : "wrong"
+                : ""
+            }
+          >
+            {option}
+          </button>
+        ))}
       </div>
-    </>
+
+      <p>{isCrct}</p>
+    </div>
   );
 }
 
