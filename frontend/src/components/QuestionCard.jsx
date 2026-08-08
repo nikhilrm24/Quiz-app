@@ -20,7 +20,12 @@ function QuestionCard() {
   }
 
   const current = questions[currQuestion];
-
+  const options = [
+  current.option1,
+  current.option2,
+  current.option3,
+  current.option4,
+];
   function changeQuestion() {
     if (currQuestion < questions.length - 1) {
       setcurrQuestion(currQuestion + 1);
@@ -78,7 +83,7 @@ function QuestionCard() {
       <p>{current.question}</p>
 
       <div className="btn">
-        {current.options.map((option, index) => (
+        {options.map((option, index) => (
           <button
             key={index}
             onClick={() => {
