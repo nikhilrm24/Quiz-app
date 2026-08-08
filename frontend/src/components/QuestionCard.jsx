@@ -8,24 +8,39 @@ function QuestionCard() {
   const [isCrct, setisCrct] = useState("");
   const [score, setScore] = useState(0);
   const [showResult, setShowResult] = useState(false);
+  const[error,setError]=useState("");
 
   useEffect(() => {
     fetch("http://localhost:3000/api/questions")
-      .then((response) => response.json())
-      .then((data) => setQuestions(data));
+      .then((response) => {
+        if(!response.ok){
+           throw new Error("failedto fetch questions");
+        }
+        
+        return response.json()})
+      .then((data) => setQuestions(data))
+      .catch((error)=>{
+        setError(error.message);
+      })
   }, []);
+  if(error){
+    return <p>{error}</p>
+  }
 
   if (questions.length === 0) {
     return <p>Loading...</p>;
+    
   }
 
   const current = questions[currQuestion];
+
   const options = [
-  current.option1,
-  current.option2,
-  current.option3,
-  current.option4,
-];
+    current.option1,
+    current.option2,
+    current.option3,
+    current.option4,
+  ];
+
   function changeQuestion() {
     if (currQuestion < questions.length - 1) {
       setcurrQuestion(currQuestion + 1);
@@ -37,7 +52,7 @@ function QuestionCard() {
   }
 
   function checkAns(index) {
-    if (current.options[index] === current.crctAns) {
+    if (options[index] === current.correct_answer) {
       setisCrct("correct answer");
       setScore((prev) => prev + 1);
     } else {
@@ -66,6 +81,7 @@ function QuestionCard() {
       <div className="res">
         <div className="res-temp">
           <h1>Quiz Completed 🎉</h1>
+
           <p>
             Your Score: {score}/{questions.length}
           </p>

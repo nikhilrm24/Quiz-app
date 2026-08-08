@@ -7,8 +7,12 @@ app.use(cors());
 
 
 app.get("/api/questions", async(req,res)=>{
-    const result=await pool.query("select * from questions");
+   try{
+     const result=await pool.query("select * from questions");
     res.json(result.rows);
+   }catch(error){
+    res.status(500).json({error:"failed fecth questions"});
+   }
 })
 
 app.listen(3000,()=>{
