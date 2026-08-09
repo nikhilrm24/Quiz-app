@@ -4,7 +4,7 @@ const {getQuestion,addQuestion, updateQ,deleteQ}=require("../controllers/questio
 
 router.get("/questions",getQuestion);
 router.post("/questions",addQuestion);
-router.put("/questions",updateQ);
-router.delete('/question/:id',deleteQ)
+router.put("/questions/:id",updateQ);
+router.delete("/questions/:id",deleteQ);
 
 module.exports = router;

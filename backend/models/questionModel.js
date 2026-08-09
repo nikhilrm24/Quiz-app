@@ -6,14 +6,17 @@ const getAllquestion=async()=>{
 
     return result.rows;
   } catch (error) {
+    console.log(error);
       throw error; 
   };
 }
 
-async function createQuestion(Question,option1,option2,option3,option4,correct_answer){
+async function createQuestion(question,option1,option2,option3,option4,correct_answer){
     try{
+       
         const result=await pool.query(`INSERT INTO questions (question,option1,option2,option3,option4,correct_answer)
-              values($1,$2,$3,$4,$5,$6)`,[Question,option1,option2,option3,option4,correct_answer]);
+              values($1,$2,$3,$4,$5,$6) returning *`,[question,option1,option2,option3,option4,correct_answer]);
+
               return result.rows[0];
     }catch(e){
         throw e;
@@ -36,6 +39,8 @@ async function deleteQuestion(id) {
         const result=await pool.query(` delete from questions 
             where id=$1
             returning *`,[id]);
+            return result.rows[0];
+            console.log(result.rows);
     }catch(er){
         throw er;
     }
