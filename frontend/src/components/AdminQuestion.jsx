@@ -7,7 +7,8 @@ function AdminQuestion(){
     const[option3,setOption3]=useState("");
     const[option4,setOption4]=useState("");
     const[correct_answer,setCorrectAnswer]=useState("");
-     const[error,setError]=useState("");
+    const [editId,seteditId]=useState(null);
+    const[error,setError]=useState("");
 
 
 
@@ -47,8 +48,24 @@ function AdminQuestion(){
    async function addQuestion() {
 
     try{
-        console.log("strating fetch")
-        const response=await fetch("http://localhost:3000/api/questions",{
+       
+       if(editId!=null){
+        
+        const response=await fetch(`http://localhost:3000/api/questions/${editId}`,{
+            method:"PUT",headers:{"content-Type":"application/json"},body:JSON.stringify({
+                question,option1,option2,option3,option4,correct_answer
+            })
+        });
+        if(!response.ok){
+            throw new Error("failed to update question");
+        }
+
+        const updateQ=await response.json();
+        setQuestions((prev)=>prev.map((q)=>
+         q.id===editId?updateQ:q));
+        seteditId(null);
+       }else{
+         const response=await fetch("http://localhost:3000/api/questions",{
         method:"POST",
         headers:{"content-type":"application/json",},
         body:JSON.stringify({
@@ -73,15 +90,21 @@ setOption2("");
 setOption3("");
 setOption4("");
 setCorrectAnswer("");
+       }
     }catch(e){
          setError(e.message);
     }
     
    }
-async function editQ() {  
-    
-    
-   }
+function editQ(q){
+    seteditId(q.id);
+    setQuestion(q.question);
+    setOption1(q.option1);
+    setOption2(q.option2);
+    setOption3(q.option3);
+    setOption4(q.option4);
+    setCorrectAnswer(q.correct_answer);
+}
 
     return(
         <div>
@@ -108,7 +131,7 @@ async function editQ() {
                  <input placeholder="correct answer" value={correct_answer} 
                  onChange={(e)=>setCorrectAnswer(e.target.value)}
                  />
-                 <button onClick={addQuestion}>add Question</button>
+                 <button onClick={addQuestion}>{editId!==null?"update Question":"edit question"}</button>
             </div>
             {questions.map((q)=>(
                 <div key={q.id}>

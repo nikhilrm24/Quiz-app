@@ -24,9 +24,9 @@ async function addQuestion(req,res){
 }
 async function updateQ(req,res) {
      try{
-    const{q,o1,o2,o3,o4,crct}=req.body;
+     const{question,option1,option2,option3,option4,correct_answer}=req.body;
     const {id}=req.params;
-    const up=await updateQuestion(id,q,o1,o2,o3,o4,crct);
+    const up=await updateQuestion(id,question,option1,option2,option3,option4,correct_answer);
     res.json(up);
    }catch(e){
     res.status(500).json({e:"cannot update question"});

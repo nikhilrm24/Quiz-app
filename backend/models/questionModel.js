@@ -30,6 +30,7 @@ async function updateQuestion(id,uestion,option1,option2,option3,option4,correct
         where id=$7 returning*`,[uestion,option1,option2,option3,option4,correct_answer,id]);
         return result.rows[0];
        }catch(error){
+        console.log(error);
         throw error;
        }
 };
