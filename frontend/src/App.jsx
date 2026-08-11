@@ -9,7 +9,7 @@ function App() {
   return(
     <>
     <BrowserRouter>
-     <nav>
+     <nav className="flex items-center gap-6 px-8 py-4 bg-white shadow-md">
           <Link to="/quiz">Quiz</Link>
           <Link to="/admin">Admin</Link>
           <Link to="/">Home</Link>

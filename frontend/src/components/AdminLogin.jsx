@@ -37,7 +37,7 @@ function AdminLogin(){
               onChange={(e)=>
               setPassword(e.target.value)} />
 
-              <button type="submit"></button>
+              <button type="submit">log in</button>
         </form>
         <p>{error}</p>
         </>
