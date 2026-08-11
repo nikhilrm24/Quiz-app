@@ -1,5 +1,8 @@
 import { useState,useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 function AdminQuestion(){
+    const navigate=useNavigate();
+
     const[questions,setQuestions]=useState([]);
     const[question,setQuestion]=useState("");
     const[option1,setOption1]=useState("");
@@ -9,6 +12,18 @@ function AdminQuestion(){
     const[correct_answer,setCorrectAnswer]=useState("");
     const [editId,seteditId]=useState(null);
     const[error,setError]=useState("");
+
+    useEffect(()=>{
+        const isAdmin=localStorage.getItem("isAdmin");
+        if(isAdmin!="true"){
+            navigate("/admin-login");
+        }
+    },[]);
+
+ function handleLogout(){
+    localStorage.removeItem("isAdmin");
+    navigate("/admin-login");
+ }
 
 
 
@@ -108,44 +123,53 @@ function editQ(q){
 
     return(
         <div>
-            <h1>admin Questions</h1>
-            <div>
-                <h2>Add Question</h2>
-                <input placeholder="Question" value={question}
-                 onChange={(e)=>setQuestion(e.target.value)}
-                 />
+            <section>
+                <div>
+                    <h1>admin Questions</h1>
+                <div>
+                    <h2>Total question:{questions.length}</h2>
+                    <h3>Add Question</h3>
+                    <input placeholder="Question" value={question}
+                    onChange={(e)=>setQuestion(e.target.value)}
+                    />
 
-                 <input placeholder="option1" value={option1}
-                 onChange={(e)=>setOption1(e.target.value)}
-                 />
+                    <input placeholder="option1" value={option1}
+                    onChange={(e)=>setOption1(e.target.value)}
+                    />
 
-                 <input placeholder="option2" value={option2}
-                 onChange={(e)=>setOption2(e.target.value)}
-                 />
-                 <input placeholder="option3" value={option3}
-                 onChange={(e)=>setOption3(e.target.value)}
-                 />
-                 <input placeholder="option4" value={option4}
-                 onChange={(e)=>setOption4(e.target.value)}
-                 />
-                 <input placeholder="correct answer" value={correct_answer} 
-                 onChange={(e)=>setCorrectAnswer(e.target.value)}
-                 />
-                 <button onClick={addQuestion}>{editId!==null?"update Question":"edit question"}</button>
-            </div>
-            {questions.map((q)=>(
-                <div key={q.id}>
-                    <h3>{q.question}</h3>
-                    <p>{q.option1}</p>
-                    <p>{q.option2}</p>
-                    <p>{q.option3}</p>
-                    <p>{q.option4}</p>
-                    <button onClick={()=>
-                        editQ(q)
-                    }>Edit</button>
-                    <button onClick={()=>deleteQuestion(q.id)}>Delete</button>
+                    <input placeholder="option2" value={option2}
+                    onChange={(e)=>setOption2(e.target.value)}
+                    />
+                    <input placeholder="option3" value={option3}
+                    onChange={(e)=>setOption3(e.target.value)}
+                    />
+                    <input placeholder="option4" value={option4}
+                    onChange={(e)=>setOption4(e.target.value)}
+                    />
+                    <input placeholder="correct answer" value={correct_answer} 
+                    onChange={(e)=>setCorrectAnswer(e.target.value)}
+                    />
+                    <button onClick={addQuestion}>{editId!==null?"update Question":"add question"}</button>
                 </div>
-            ))}
+                </div>
+                <div>
+                    <h2> All Questions</h2>
+                    {questions.map((q)=>(
+                    <div key={q.id}>
+                        <h3>{q.question}</h3>
+                        <p>{q.option1}</p>
+                        <p>{q.option2}</p>
+                        <p>{q.option3}</p>
+                        <p>{q.option4}</p>
+                        <button onClick={()=>
+                            editQ(q)
+                        }>Edit</button>
+                        <button onClick={()=>deleteQuestion(q.id)}>Delete</button>
+                    </div>
+                ))}
+                </div>
+            </section>
+            <button onClick={handleLogout}>logout</button>
         </div>
     );
 }
