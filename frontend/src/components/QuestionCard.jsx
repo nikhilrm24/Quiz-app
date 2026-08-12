@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import "./QuestionCard.css";
 
 function QuestionCard() {
   const [questions, setQuestions] = useState([]);
@@ -80,27 +79,32 @@ function QuestionCard() {
 
   if (showResult) {
     return (
-      <div className="res">
-        <div className="res-temp">
-          <h1>Quiz Completed 🎉</h1>
+      <div className="min-h-screen bg-gray-100 p-6 flex items-center justify-center ">
+        <div className="w-full max-w-xl min-h-[300px] bg-white rounded-2xl shadow-xlp-10 text-center p-10 flex flex-col items-center justify-center">
+          <h1 className="text-3xl font-bold text-blue-600 mb-4">Quiz Completed 🎉</h1>
 
-          <p>
+          <p className="text-xl font-semibold text-gray-700 mb-6">
             Your Score: {score}/{questions.length}
           </p>
 
-          <button onClick={restartQuiz}>Restart</button>
+          <button onClick={restartQuiz} className="bg-blue-600 text-whie px-6 py-3 rounded-lg">Restart</button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="main">
-      <h1>Quiz App</h1>
+    <div className=" flex justify-center items-center min-h-screen flex-col">
+      
+     <div className=" bg-white rounded-2xl shadow-lg w-full min-h-[450px] p-10 max-w-3xl ">
+       <div className="">
+        <h1 className=" text-3xl font-bold text-center text-blue-600 mb-8">Quiz App</h1>
 
-      <p>{current.question}</p>
+        <p className="text-2xl font-bold 
+        text-gray-800 mb-6">{current.question}</p>
+      </div>
 
-      <div className="btn">
+      <div className="grid grid-cols-2 gap-4">
         {options.map((option, index) => (
           <button
             key={index}
@@ -108,20 +112,30 @@ function QuestionCard() {
               selectIndex(index);
               checkAns(index);
             }}
-            className={
-              index === selectOption
-                ? isCrct === "correct answer"
-                  ? "crct"
-                  : "wrong"
-                : ""
-            }
+            // className={
+            //   index === selectOption
+            //     ? isCrct === "correct answer"
+            //       ? "crct"
+            //       : "wrong"
+            //     : ""
+            // }
+
+             className={
+              `w-full rounded-xl border p-4 text-left
+              font-medium transition ${
+                index===selectOption? isCrct=== "correct answer" ?
+                "bg-green-200 text-green-700":
+                "bg-red-100 border-red-500 text-red-700":
+                "bg-gray-50 border-gray-200 hover:bg-blue-50 hover:border-blue-400"
+              }` }
           >
             {option}
           </button>
         ))}
       </div>
-
-      <p>{isCrct}</p>
+      <p className="text-center mt-4 font-semibold text-lg">{isCrct}</p>
+     </div>
+      
     </div>
   );
 }
